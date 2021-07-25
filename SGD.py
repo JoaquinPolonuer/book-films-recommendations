@@ -47,7 +47,7 @@ class SGDMF():
                                    (error * self.user_vecs[u, :] - \
                                     self.item_reg * self.item_vecs[i,:])
     
-    def train(self, n_iter=10, learning_rate=0.1, pct_train = 0.8):
+    def train(self, n_iter=10, learning_rate=0.1):
         """ Train model for n_iter iterations from scratch."""
         # initialize latent vectors        
         self.user_vecs = np.random.random(size=(self.n_users, self.n_factors))
@@ -64,7 +64,7 @@ class SGDMF():
             # each epoch using a pct train
             np.random.shuffle(self.training_indices)
             self.training_indices = np.random.choice(self.training_indices,
-                                                     size = int(self.n_samples * pct_train),
+                                                     size = int(self.n_samples * self.pct_train),
                                                      replace = False)
             self.sgd()
             print("Finished epoch", epoch, "of", n_iter)
@@ -79,17 +79,9 @@ class SGDMF():
         return prediction
 
     
-    # def train_test_split(self, ratings, pct):
-    #     test_set = np.zeros(ratings.shape)
-    #     train_set = ratings.copy()
-    #     for user in range(ratings.shape[0]):
-    #         user_rating_idx = ratings[user, :].nonzero()[0]
-    #         test_ratings = np.random.choice(user_rating_idx,
-    #                                         size=int(len(user_rating_idx)*pct),
-    #                                         replace=False)
-    #         train_set[user, test_ratings] = 0.
-    #         test_set[user, test_ratings] = ratings[user, test_ratings]
-            
-    #     # Test and training are truly disjoint
-    #     assert(np.all((train_set * test_set) == 0)) 
-    #     return train_set, test_set
+    def get_most_similar_user_id(self,my_row):
+        similarities = []
+        for row in self.ratings:
+            similarities.append(cosine_similarity([row],[my_row]))
+        most_similar_user = np.argmax(similarities)
+        return most_similar_user
