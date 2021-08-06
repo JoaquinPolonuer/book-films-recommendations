@@ -1,10 +1,13 @@
 import pandas as pd
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
-
+import re
 class Books:
     def __init__(self, global_path):
         self.objects = pd.read_csv(global_path+ "/books.csv")
+    
+    def get_book_id_by_title(self, title):
+        return self.objects[self.objects.title.str.contains(title, flags=re.IGNORECASE)]
         
 class Tags:
     def __init__(self, global_path):
@@ -36,7 +39,18 @@ if __name__ == "__main__":
     tags = Tags(goodbooks_dataset_path)
     book_tags = BookTags(goodbooks_dataset_path)
 
-    book = books.objects.iloc[2]
+    while True:
+        title = input("Title: ")
+        print("\n")
+        matches = books.get_book_id_by_title(title)
+        [print(match.title,match.book_id-1) for match in matches.itertuples()]
+        print("\n")
+        if input("Encontraste tu libro? (y/n)") == "y":
+            print("\n")
+            break
+
+    book_id = int(input("Enter the book id:"))
+    book = books.objects.iloc[book_id]
     book_similarities = book_tags.get_book_similarities(book)
     print("Nuestro libro es", book["title"], "los mas parecidos son")
     [print(books.objects.iloc[i]["title"], "("+str(int(book_similarities[i]*100))+"%)") for i in book_similarities.argsort()[::-1][:10]]
