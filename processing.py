@@ -34,7 +34,7 @@ class BookTags:
         return similarities_to_book
 
 if __name__ == "__main__":
-    goodbooks_dataset_path = "/home/joacopolo/Documents/software/python/draft-projects/books-recommender/goodbooks-10k"
+    goodbooks_dataset_path = "dataset/"
     books = Books(goodbooks_dataset_path)
     tags = Tags(goodbooks_dataset_path)
     book_tags = BookTags(goodbooks_dataset_path)
