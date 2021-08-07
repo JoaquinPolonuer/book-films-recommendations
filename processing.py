@@ -8,7 +8,13 @@ class Books:
     
     def get_book_id_by_title(self, title):
         return self.objects[self.objects.title.str.contains(title, flags=re.IGNORECASE)]
-        
+    
+    def get_books(self):
+        return list(self.objects.T.to_dict().values())
+
+    def get_book_by_id(self, book_id):
+        return self.objects.iloc[book_id-1]     
+           
 class Tags:
     def __init__(self, global_path):
         self.objects = pd.read_csv(global_path+ "/tags.csv")
@@ -43,7 +49,7 @@ if __name__ == "__main__":
         title = input("Title: ")
         print("")
         matches = books.get_book_id_by_title(title)
-        [print(match.title,match.book_id-1) for match in matches.itertuples()]
+        [print(match.title, match.book_id) for match in matches.itertuples()]
         print("")
         if input("Encontraste tu libro? (y/n)") == "y":
             print("")
@@ -51,7 +57,7 @@ if __name__ == "__main__":
 
     book_id = int(input("Ingresa el id del libro:"))
     print("")
-    book = books.objects.iloc[book_id]
+    book = books.get_book_by_id(book_id)
     book_similarities = book_tags.get_book_similarities(book)
     print("Nuestro libro es", book["title"],"...")
     print("Los mas parecidos son:\n")
