@@ -41,16 +41,17 @@ if __name__ == "__main__":
 
     while True:
         title = input("Title: ")
-        print("\n")
+        print("")
         matches = books.get_book_id_by_title(title)
         [print(match.title,match.book_id-1) for match in matches.itertuples()]
-        print("\n")
+        print("")
         if input("Encontraste tu libro? (y/n)") == "y":
-            print("\n")
+            print("")
             break
 
-    book_id = int(input("Enter the book id:"))
+    book_id = int(input("Ingresa el id del libro:"))
     book = books.objects.iloc[book_id]
     book_similarities = book_tags.get_book_similarities(book)
-    print("Nuestro libro es", book["title"], "los mas parecidos son")
-    [print(books.objects.iloc[i]["title"], "("+str(int(book_similarities[i]*100))+"%)") for i in book_similarities.argsort()[::-1][:10]]
+    print("Nuestro libro es", book["title"],"...")
+    print("Los mas parecidos son:\n")
+    [print(books.objects.iloc[i]["title"], "-", books.objects.iloc[i]["authors"], "("+str(int(book_similarities[i]*100))+"%)") for i in book_similarities.argsort()[::-1][1:10]]
