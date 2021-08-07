@@ -50,6 +50,7 @@ if __name__ == "__main__":
             break
 
     book_id = int(input("Ingresa el id del libro:"))
+    print("")
     book = books.objects.iloc[book_id]
     book_similarities = book_tags.get_book_similarities(book)
     print("Nuestro libro es", book["title"],"...")
